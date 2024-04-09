@@ -25,9 +25,21 @@ export default function SuggestedUsers() {
                 </Text>
             </Flex>
 
-            <SuggestedUser />
-            <SuggestedUser />
-            <SuggestedUser />
+            <SuggestedUser
+                name="Dan Abramov"
+                followers={100}
+                avatar="https://bit.ly/dan-abramov"
+            />
+            <SuggestedUser
+                name="Ryan Florence"
+                followers={100}
+                avatar="https://bit.ly/ryan-florence"
+            />
+            <SuggestedUser
+                name="Code Artistry"
+                followers={100}
+                avatar="https://bit.ly/code-beast"
+            />
 
             <Box
                 fontSize={12}
