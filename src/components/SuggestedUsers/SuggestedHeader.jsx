@@ -11,7 +11,7 @@ export default function SuggestedHeader() {
         <Flex justifyContent={"space-between"} alignItems={"center"} w={"full"}>
             <Flex alignItems={"center"} gap={2}>
                 <Link to={`/${authUser?.username}`}>
-                    <Avatar size={"lg"} src={authUser?.photoURL} />
+                    <Avatar size={"md"} src={authUser?.photoURL} />
                 </Link>
                 <Link to={`/${authUser?.username}`}>
                     <Text fontSize={12} fontWeight={"bold"}>
@@ -26,6 +26,7 @@ export default function SuggestedHeader() {
                 _hover={{ bg: "transparent" }}
                 fontSize={14}
                 fontWeight={"medium"}
+                p={0}
                 color={"blue.400"}
                 cursor={"pointer"}
                 onClick={handleLogout}
