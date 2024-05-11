@@ -6,8 +6,17 @@ import {
     Text,
     VStack,
 } from "@chakra-ui/react";
+import useUserProfileStore from "../../store/userProfileStore";
+import useAuthStore from "../../store/authStore";
 
 export default function ProfileHeader() {
+    const { userProfile } = useUserProfileStore();
+    const authUser = useAuthStore((state) => state.user);
+    const visitingOwnProfileAndAuth =
+        authUser && authUser.username === userProfile?.username;
+    const visitingAnotherProfileAndAuth =
+        authUser && authUser.username !== userProfile?.username;
+
     return (
         <Flex
             gap={{ base: 4, sm: 10 }}
@@ -21,9 +30,9 @@ export default function ProfileHeader() {
                 mx={"auto"}
             >
                 <Avatar
-                    src="/profilepic.png"
-                    name="As a Programmer"
-                    alt="As a programmer logo"
+                    src={userProfile?.profilePicUrl}
+                    name={userProfile?.username}
+                    alt={userProfile?.username}
                 />
             </AvatarGroup>
 
@@ -36,41 +45,59 @@ export default function ProfileHeader() {
                     w={"full"}
                 >
                     <Text fontSize={{ base: "sm", md: "lg" }}>
-                        asaprogrammer_
+                        {userProfile?.username}
                     </Text>
 
-                    <Flex
-                        gap={4}
-                        alignItems={"center"}
-                        justifyContent={"center"}
-                    >
-                        <Button
-                            bg={"white"}
-                            color={"black"}
-                            _hover={{ bg: "whiteAlpha.800" }}
-                            size={{ base: "xs", md: "sm" }}
+                    {visitingOwnProfileAndAuth && (
+                        <Flex
+                            gap={4}
+                            alignItems={"center"}
+                            justifyContent={"center"}
                         >
-                            Edit Profile
-                        </Button>
-                    </Flex>
+                            <Button
+                                bg={"white"}
+                                color={"black"}
+                                _hover={{ bg: "whiteAlpha.800" }}
+                                size={{ base: "xs", md: "sm" }}
+                            >
+                                Edit Profile
+                            </Button>
+                        </Flex>
+                    )}
+                    {visitingAnotherProfileAndAuth && (
+                        <Flex
+                            gap={4}
+                            alignItems={"center"}
+                            justifyContent={"center"}
+                        >
+                            <Button
+                                bg={"blue.500"}
+                                color={"white"}
+                                _hover={{ bg: "blue.600" }}
+                                size={{ base: "xs", md: "sm" }}
+                            >
+                                Follow
+                            </Button>
+                        </Flex>
+                    )}
                 </Flex>
 
                 <Flex alignItems={"center"} gap={{ base: 2, sm: 4 }}>
                     <Text fontSize={{ base: "xs", md: "sm" }}>
                         <Text as={"span"} fontWeight={"bold"} mr={1}>
-                            4
+                            {userProfile?.posts.length}
                         </Text>
                         Posts
                     </Text>
                     <Text fontSize={{ base: "xs", md: "sm" }}>
                         <Text as={"span"} fontWeight={"bold"} mr={1}>
-                            200
+                            {userProfile?.followers.length}
                         </Text>
                         Followers
                     </Text>
                     <Text fontSize={{ base: "xs", md: "sm" }}>
                         <Text as={"span"} fontWeight={"bold"} mr={1}>
-                            149
+                            {userProfile?.following.length}
                         </Text>
                         Following
                     </Text>
@@ -78,10 +105,10 @@ export default function ProfileHeader() {
 
                 <Flex alignItems={"center"} gap={4}>
                     <Text fontSize={"sm"} fontWeight={"bold"}>
-                        As a Programmer
+                        {userProfile?.fullName}
                     </Text>
                 </Flex>
-                <Text fontSize={"sm"}>I am a programmer. I love coding.</Text>
+                <Text fontSize={"sm"}>{userProfile?.bio}</Text>
             </VStack>
         </Flex>
     );
