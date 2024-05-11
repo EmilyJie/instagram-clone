@@ -11,7 +11,7 @@ export default function SuggestedHeader() {
         <Flex justifyContent={"space-between"} alignItems={"center"} w={"full"}>
             <Flex alignItems={"center"} gap={2}>
                 <Link to={`/${authUser?.username}`}>
-                    <Avatar size={"md"} src={authUser?.photoURL} />
+                    <Avatar size={"md"} src={authUser?.profilePicURL} />
                 </Link>
                 <Link to={`/${authUser?.username}`}>
                     <Text fontSize={12} fontWeight={"bold"}>
