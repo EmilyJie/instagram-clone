@@ -95,15 +95,21 @@ export default function ProfilePost({ img }) {
                             w={{ base: "90%", sm: "70%", md: "full" }}
                             mx={"auto"}
                         >
-                            <Box
+                            <Flex
                                 borderRadius={4}
                                 overflow={"hidden"}
                                 border={"1px solid"}
                                 borderColor={"whiteAlpha.300"}
                                 flex={1.5}
+                                justifyContent={"center"}
+                                alignItems={"center"}
                             >
-                                <Image src={img} alt={"profile post"} />
-                            </Box>
+                                <Image
+                                    src={img}
+                                    alt={"profile post"}
+                                    maxW={"500px"}
+                                />
+                            </Flex>
 
                             <Flex
                                 flex={1}
