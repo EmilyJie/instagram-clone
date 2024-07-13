@@ -16,7 +16,7 @@ export default function HomePage() {
                     display={{ base: "none", md: "block" }}
                     maxW={"300px"}
                 >
-                    {/* <SuggestedUsers /> */}
+                    <SuggestedUsers />
                 </Box>
             </Flex>
         </Container>
