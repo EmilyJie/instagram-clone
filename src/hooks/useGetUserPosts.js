@@ -24,13 +24,13 @@ export default function useGetUserPosts() {
                 );
                 const querySnapshot = await getDocs(q);
 
-                const posts = [];
+                const userPosts = [];
                 querySnapshot.forEach((doc) => {
-                    posts.push({ ...doc.data(), id: doc.id });
+                    userPosts.push({ ...doc.data(), id: doc.id });
                 });
 
-                posts.sort((a, b) => b.createdAt - a.createdAt);
-                setPosts(posts);
+                userPosts.sort((a, b) => b.createdAt - a.createdAt);
+                setPosts(userPosts);
             } catch (error) {
                 showToast("Error", error.message, "error");
                 setPosts([]);

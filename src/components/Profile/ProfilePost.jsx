@@ -13,15 +13,20 @@ import {
     Avatar,
     Divider,
     VStack,
+    Button,
 } from "@chakra-ui/react";
 import { AiFillHeart } from "react-icons/ai";
 import { FaComment } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import Comment from "../Comment/Comment";
 import PostFooter from "../FeedPosts/PostFooter";
+import useUserProfileStore from "../../store/userProfileStore";
+import useAuthStore from "../../store/authStore";
 
-export default function ProfilePost({ img }) {
+export default function ProfilePost({ post }) {
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const userProfile = useUserProfileStore((state) => state.userProfile);
+    const authUser = useAuthStore((state) => state.user);
 
     return (
         <>
@@ -58,21 +63,21 @@ export default function ProfilePost({ img }) {
                         <Flex>
                             <AiFillHeart size={20} />
                             <Text fontWeight={"bold"} ml={2}>
-                                7
+                                {post.likes.length}
                             </Text>
                         </Flex>
 
                         <Flex>
                             <FaComment size={20} />
                             <Text fontWeight={"bold"} ml={2}>
-                                7
+                                {post.comments.length}
                             </Text>
                         </Flex>
                     </Flex>
                 </Flex>
 
                 <Image
-                    src={img}
+                    src={post.imageURL}
                     alt={"profile post"}
                     w={"100%"}
                     h={"100%"}
@@ -94,6 +99,8 @@ export default function ProfilePost({ img }) {
                             gap={4}
                             w={{ base: "90%", sm: "70%", md: "full" }}
                             mx={"auto"}
+                            maxH={"90vh"}
+                            minH={"50vh"}
                         >
                             <Flex
                                 borderRadius={4}
@@ -105,7 +112,7 @@ export default function ProfilePost({ img }) {
                                 alignItems={"center"}
                             >
                                 <Image
-                                    src={img}
+                                    src={post.imageURL}
                                     alt={"profile post"}
                                     maxW={"500px"}
                                 />
@@ -123,26 +130,33 @@ export default function ProfilePost({ img }) {
                                 >
                                     <Flex alignItems={"center"} gap={4}>
                                         <Avatar
-                                            src="/profilepic.png"
+                                            src={userProfile.profilePicURL}
                                             size={"sm"}
                                             name="As a Programmer"
                                         />
 
                                         <Text fontWeight={"bold"} fontSize={12}>
-                                            asaprogrammer_
+                                            {userProfile.username}
                                         </Text>
                                     </Flex>
 
-                                    <Box
-                                        _hover={{
-                                            bg: "whiteAlpha.300",
-                                            color: "red.600",
-                                        }}
-                                        borderRadius={4}
-                                        p={1}
-                                    >
-                                        <MdDelete size={20} cursor="pointer" />
-                                    </Box>
+                                    {authUser?.uid === userProfile.uid && (
+                                        <Button
+                                            size={"sm"}
+                                            bg={"transparent"}
+                                            _hover={{
+                                                bg: "whiteAlpha.300",
+                                                color: "red.600",
+                                            }}
+                                            borderRadius={4}
+                                            p={1}
+                                        >
+                                            <MdDelete
+                                                size={20}
+                                                cursor="pointer"
+                                            />
+                                        </Button>
+                                    )}
                                 </Flex>
 
                                 <Divider my={4} bg={"gray.500"} />
@@ -158,72 +172,6 @@ export default function ProfilePost({ img }) {
                                         username="asaprogrammer_"
                                         profilePic="/profilepic.png"
                                         text="Dummy image from unsplash"
-                                    />
-                                    <Comment
-                                        createAt="12h ago"
-                                        username="abrahmov"
-                                        profilePic="https://bit.ly/dan-abramov"
-                                        text="Nice post"
-                                    />
-                                    <Comment
-                                        createAt="3h ago"
-                                        username="kentdodds"
-                                        profilePic="https://bit.ly/kent-c-dodds"
-                                        text="Good clone bro!"
-                                    />
-                                    <Comment
-                                        createAt="3h ago"
-                                        username="kentdodds"
-                                        profilePic="https://bit.ly/kent-c-dodds"
-                                        text="Good clone bro!"
-                                    />
-                                    <Comment
-                                        createAt="3h ago"
-                                        username="kentdodds"
-                                        profilePic="https://bit.ly/kent-c-dodds"
-                                        text="Good clone bro!"
-                                    />
-                                    <Comment
-                                        createAt="3h ago"
-                                        username="kentdodds"
-                                        profilePic="https://bit.ly/kent-c-dodds"
-                                        text="Good clone bro!"
-                                    />
-                                    <Comment
-                                        createAt="3h ago"
-                                        username="kentdodds"
-                                        profilePic="https://bit.ly/kent-c-dodds"
-                                        text="Good clone bro!"
-                                    />
-                                    <Comment
-                                        createAt="3h ago"
-                                        username="kentdodds"
-                                        profilePic="https://bit.ly/kent-c-dodds"
-                                        text="Good clone bro!"
-                                    />
-                                    <Comment
-                                        createAt="3h ago"
-                                        username="kentdodds"
-                                        profilePic="https://bit.ly/kent-c-dodds"
-                                        text="Good clone bro!"
-                                    />
-                                    <Comment
-                                        createAt="3h ago"
-                                        username="kentdodds"
-                                        profilePic="https://bit.ly/kent-c-dodds"
-                                        text="Good clone bro!"
-                                    />
-                                    <Comment
-                                        createAt="3h ago"
-                                        username="kentdodds"
-                                        profilePic="https://bit.ly/kent-c-dodds"
-                                        text="Good clone bro!"
-                                    />
-                                    <Comment
-                                        createAt="3h ago"
-                                        username="kentdodds"
-                                        profilePic="https://bit.ly/kent-c-dodds"
-                                        text="Good clone bro!"
                                     />
                                 </VStack>
                                 <Divider my={4} bg={"gray.800"} />
