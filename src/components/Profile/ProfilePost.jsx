@@ -207,16 +207,16 @@ export default function ProfilePost({ post }) {
                                     maxH={"350px"}
                                     overflowY={"auto"}
                                 >
-                                    <Comment
-                                        createAt="1d ago"
-                                        username="asaprogrammer_"
-                                        profilePic="/profilepic.png"
-                                        text="Dummy image from unsplash"
-                                    />
+                                    {post.comments.map((comment) => (
+                                        <Comment
+                                            key={comment.createdAt}
+                                            comment={comment}
+                                        />
+                                    ))}
                                 </VStack>
                                 <Divider my={4} bg={"gray.800"} />
 
-                                <PostFooter isProfilePage={true} />
+                                <PostFooter isProfilePage={true} post={post} />
                             </Flex>
                         </Flex>
                     </ModalBody>

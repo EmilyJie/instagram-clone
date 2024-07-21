@@ -13,10 +13,13 @@ import {
     NotificationsLogo,
     UnlikeLogo,
 } from "../../assets/constants";
+import usePostComment from "../../hooks/usePostComment";
 
-export default function PostFooter({ username, isProfilePage }) {
+export default function PostFooter({ post, username, isProfilePage }) {
+    const { isCommenting, handlePostComment } = usePostComment();
     const [liked, setLiked] = useState(false);
     const [likes, setLikes] = useState(1000);
+    const [comment, setComment] = useState("");
 
     const handleLike = () => {
         if (liked) {
@@ -26,6 +29,11 @@ export default function PostFooter({ username, isProfilePage }) {
             setLiked(true);
             setLikes(likes + 1);
         }
+    };
+
+    const handleSubmitComment = async () => {
+        await handlePostComment(post.id, comment);
+        setComment("");
     };
 
     return (
@@ -68,6 +76,8 @@ export default function PostFooter({ username, isProfilePage }) {
                         variant={"flushed"}
                         placeholder={"Add a comment..."}
                         fontSize={14}
+                        onChange={(e) => setComment(e.target.value)}
+                        value={comment}
                     />
                     <InputRightElement>
                         <Button
@@ -77,6 +87,8 @@ export default function PostFooter({ username, isProfilePage }) {
                             cursor={"pointer"}
                             _hover={{ color: "white" }}
                             bg={"transparent"}
+                            onClick={handleSubmitComment}
+                            isLoading={isCommenting}
                         >
                             Post
                         </Button>
