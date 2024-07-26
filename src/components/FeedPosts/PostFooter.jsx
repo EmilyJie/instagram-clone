@@ -14,23 +14,13 @@ import {
     UnlikeLogo,
 } from "../../assets/constants";
 import usePostComment from "../../hooks/usePostComment";
+import useLikePost from "../../hooks/useLikePost";
 
 export default function PostFooter({ post, username, isProfilePage }) {
     const { isCommenting, handlePostComment } = usePostComment();
-    const [liked, setLiked] = useState(false);
-    const [likes, setLikes] = useState(1000);
     const [comment, setComment] = useState("");
     const commentRef = useRef(null);
-
-    const handleLike = () => {
-        if (liked) {
-            setLiked(false);
-            setLikes(likes - 1);
-        } else {
-            setLiked(true);
-            setLikes(likes + 1);
-        }
-    };
+    const { handleLikePost, isLiked, likes } = useLikePost(post);
 
     const handleSubmitComment = async () => {
         await handlePostComment(post.id, comment);
@@ -40,8 +30,8 @@ export default function PostFooter({ post, username, isProfilePage }) {
     return (
         <Box mb={10} marginTop={"auto"}>
             <Flex alignItems={"center"} gap={4} w={"full"} pt={0} mb={2} mt={4}>
-                <Box onClick={handleLike} cursor={"pointer"} fontSize={18}>
-                    {!liked ? <NotificationsLogo /> : <UnlikeLogo />}
+                <Box onClick={handleLikePost} cursor={"pointer"} fontSize={18}>
+                    {!isLiked ? <NotificationsLogo /> : <UnlikeLogo />}
                 </Box>
 
                 <Box
