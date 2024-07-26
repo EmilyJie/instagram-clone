@@ -18,6 +18,7 @@ export default function useGetFeedPosts() {
             setIsLoading(true);
             if (authUser.following.length === 0) {
                 setPosts([]);
+                setIsLoading(false);
                 return;
             }
 
