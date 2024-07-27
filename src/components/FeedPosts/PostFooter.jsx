@@ -6,6 +6,7 @@ import {
     InputGroup,
     InputRightElement,
     Text,
+    useDisclosure,
 } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import {
@@ -16,12 +17,14 @@ import {
 import usePostComment from "../../hooks/usePostComment";
 import useLikePost from "../../hooks/useLikePost";
 import { timeAgo } from "../../utils/timeAgo";
+import CommentsModal from "../Modals/CommentModal";
 
 export default function PostFooter({ post, isProfilePage, creatorProfile }) {
     const { isCommenting, handlePostComment } = usePostComment();
     const [comment, setComment] = useState("");
     const commentRef = useRef(null);
     const { handleLikePost, isLiked, likes } = useLikePost(post);
+    const { isOpen, onOpen, onClose } = useDisclosure();
 
     const handleSubmitComment = async () => {
         await handlePostComment(post.id, comment);
@@ -63,9 +66,22 @@ export default function PostFooter({ post, isProfilePage, creatorProfile }) {
                         </Text>
                     </Text>
                     {post.comments.length > 0 && (
-                        <Text fontSize={"sm"} color={"gray"} cursor={"pointer"}>
+                        <Text
+                            fontSize={"sm"}
+                            color={"gray"}
+                            cursor={"pointer"}
+                            onClick={onOpen}
+                        >
                             View all {post.comments.length} comments
                         </Text>
+                    )}
+                    {/** comments modal only in the home page */}
+                    {isOpen && (
+                        <CommentsModal
+                            isOpen={isOpen}
+                            onClose={onClose}
+                            post={post}
+                        />
                     )}
                 </>
             )}
