@@ -6,36 +6,43 @@ import {
     InputGroup,
     InputRightElement,
     Text,
+    useDisclosure,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
     CommentLogo,
     NotificationsLogo,
     UnlikeLogo,
 } from "../../assets/constants";
+import usePostComment from "../../hooks/usePostComment";
+import useLikePost from "../../hooks/useLikePost";
+import { timeAgo } from "../../utils/timeAgo";
+import CommentsModal from "../Modals/CommentModal";
 
-export default function PostFooter({ username, isProfilePage }) {
-    const [liked, setLiked] = useState(false);
-    const [likes, setLikes] = useState(1000);
+export default function PostFooter({ post, isProfilePage, creatorProfile }) {
+    const { isCommenting, handlePostComment } = usePostComment();
+    const [comment, setComment] = useState("");
+    const commentRef = useRef(null);
+    const { handleLikePost, isLiked, likes } = useLikePost(post);
+    const { isOpen, onOpen, onClose } = useDisclosure();
 
-    const handleLike = () => {
-        if (liked) {
-            setLiked(false);
-            setLikes(likes - 1);
-        } else {
-            setLiked(true);
-            setLikes(likes + 1);
-        }
+    const handleSubmitComment = async () => {
+        await handlePostComment(post.id, comment);
+        setComment("");
     };
 
     return (
         <Box mb={10} marginTop={"auto"}>
             <Flex alignItems={"center"} gap={4} w={"full"} pt={0} mb={2} mt={4}>
-                <Box onClick={handleLike} cursor={"pointer"} fontSize={18}>
-                    {!liked ? <NotificationsLogo /> : <UnlikeLogo />}
+                <Box onClick={handleLikePost} cursor={"pointer"} fontSize={18}>
+                    {!isLiked ? <NotificationsLogo /> : <UnlikeLogo />}
                 </Box>
 
-                <Box cursor={"pointer"} fontSize={18}>
+                <Box
+                    cursor={"pointer"}
+                    fontSize={18}
+                    onClick={() => commentRef.current.focus()}
+                >
                     <CommentLogo />
                 </Box>
             </Flex>
@@ -43,17 +50,39 @@ export default function PostFooter({ username, isProfilePage }) {
             <Text fontWeight={600} fontSize={"sm"}>
                 {likes} likes
             </Text>
+
+            {isProfilePage && (
+                <Text fontSize={"12"} color={"gray"}>
+                    Posted {timeAgo(post.createdAt)}
+                </Text>
+            )}
+
             {!isProfilePage && (
                 <>
                     <Text fontSize={"sm"} fontWeight={700}>
-                        {username}&nbsp;&nbsp;
+                        {creatorProfile?.username}&nbsp;&nbsp;
                         <Text as={"span"} fontWeight={400}>
-                            Feeling good
+                            {post.caption}
                         </Text>
                     </Text>
-                    <Text fontSize={"sm"} color={"gray"}>
-                        View all 1,000 comments
-                    </Text>
+                    {post.comments.length > 0 && (
+                        <Text
+                            fontSize={"sm"}
+                            color={"gray"}
+                            cursor={"pointer"}
+                            onClick={onOpen}
+                        >
+                            View all {post.comments.length} comments
+                        </Text>
+                    )}
+                    {/** comments modal only in the home page */}
+                    {isOpen && (
+                        <CommentsModal
+                            isOpen={isOpen}
+                            onClose={onClose}
+                            post={post}
+                        />
+                    )}
                 </>
             )}
 
@@ -68,6 +97,9 @@ export default function PostFooter({ username, isProfilePage }) {
                         variant={"flushed"}
                         placeholder={"Add a comment..."}
                         fontSize={14}
+                        onChange={(e) => setComment(e.target.value)}
+                        value={comment}
+                        ref={commentRef}
                     />
                     <InputRightElement>
                         <Button
@@ -77,6 +109,8 @@ export default function PostFooter({ username, isProfilePage }) {
                             cursor={"pointer"}
                             _hover={{ color: "white" }}
                             bg={"transparent"}
+                            onClick={handleSubmitComment}
+                            isLoading={isCommenting}
                         >
                             Post
                         </Button>

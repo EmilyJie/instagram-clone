@@ -1,45 +1,41 @@
 import { Box, Flex, Link, Text, VStack } from "@chakra-ui/react";
 import SuggestedHeader from "./SuggestedHeader";
 import SuggestedUser from "./SuggestedUser";
+import useGetSuggestedUser from "../../hooks/useGetSuggestedUser";
 
 export default function SuggestedUsers() {
+    const { isLoading, suggestedUsers } = useGetSuggestedUser();
+
+    // optional render loading skeleton
+    if (isLoading) return null;
+
     return (
         <VStack py={8} px={6} gap={4}>
             <SuggestedHeader />
 
-            <Flex
-                alignItems={"center"}
-                justifyContent={"space-between"}
-                w={"full"}
-            >
-                <Text fontSize={12} fontWeight={"bold"} color={"gray.500"}>
-                    Suggested for you
-                </Text>
-                <Text
-                    fontSize={12}
-                    fontWeight={"bold"}
-                    _hover={{ color: "gray.400" }}
-                    cursor={"pointer"}
+            {suggestedUsers.length !== 0 && (
+                <Flex
+                    alignItems={"center"}
+                    justifyContent={"space-between"}
+                    w={"full"}
                 >
-                    See all
-                </Text>
-            </Flex>
+                    <Text fontSize={12} fontWeight={"bold"} color={"gray.500"}>
+                        Suggested for you
+                    </Text>
+                    <Text
+                        fontSize={12}
+                        fontWeight={"bold"}
+                        _hover={{ color: "gray.400" }}
+                        cursor={"pointer"}
+                    >
+                        See all
+                    </Text>
+                </Flex>
+            )}
 
-            <SuggestedUser
-                name="Dan Abramov"
-                followers={100}
-                avatar="https://bit.ly/dan-abramov"
-            />
-            <SuggestedUser
-                name="Ryan Florence"
-                followers={100}
-                avatar="https://bit.ly/ryan-florence"
-            />
-            <SuggestedUser
-                name="Code Artistry"
-                followers={100}
-                avatar="https://bit.ly/code-beast"
-            />
+            {suggestedUsers.map((user) => (
+                <SuggestedUser key={user.id} user={user} />
+            ))}
 
             <Box
                 fontSize={12}

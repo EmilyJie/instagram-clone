@@ -1,11 +1,10 @@
-import { Avatar, Flex, Skeleton, SkeletonCircle, Text } from "@chakra-ui/react";
-import useGetUserProfileById from "../../hooks/useGetUserProfileById";
+import { Avatar, Flex, Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { timeAgo } from "../../utils/timeAgo";
+import useUserProfileStore from "../../store/userProfileStore";
 
-export default function Comment({ comment }) {
-    const { isLoading, userProfile } = useGetUserProfileById(comment.createdBy);
-    if (isLoading) return <CommentSkeleton />;
+export default function Caption({ post }) {
+    const userProfile = useUserProfileStore((state) => state.userProfile);
 
     return (
         <Flex gap={4} alignItems={"center"}>
@@ -19,24 +18,12 @@ export default function Comment({ comment }) {
                             {userProfile?.username}
                         </Text>
                     </Link>
-                    <Text fontSize={14}>{comment.comment}</Text>
+                    <Text fontSize={14}>{post.caption}</Text>
                 </Flex>
                 <Text fontSize={12} color={"gray"}>
-                    {timeAgo(comment.createdAt)}
+                    {timeAgo(post.createdAt)}
                 </Text>
             </Flex>
         </Flex>
     );
 }
-
-const CommentSkeleton = () => {
-    return (
-        <Flex gap={4} w={"full"} alignItems={"center"}>
-            <SkeletonCircle h={10} w={10} />
-            <Flex gap={1} flexDir={"column"}>
-                <Skeleton h={2} w={100} />
-                <Skeleton h={2} w={50} />
-            </Flex>
-        </Flex>
-    );
-};

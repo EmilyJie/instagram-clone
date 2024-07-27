@@ -4,24 +4,19 @@ import {
     Flex,
     Skeleton,
     SkeletonCircle,
+    Text,
     VStack,
 } from "@chakra-ui/react";
 import FeedPost from "./FeedPost";
-import { useEffect, useState } from "react";
+import useGetFeedPosts from "../../hooks/useGetFeedPosts";
 
 export default function FeedPosts() {
-    const [isLoaindg, setIsLoading] = useState(true);
-
-    useEffect(() => {
-        setTimeout(() => {
-            setIsLoading(false);
-        }, 2000);
-    }, []);
+    const { isLoading, posts } = useGetFeedPosts();
 
     return (
         <Container maxW={"container.sm"} py={10} px={2}>
-            {isLoaindg ? (
-                [0, 1, 2, 3].map((_, index) => (
+            {isLoading &&
+                [0, 1, 2].map((_, index) => (
                     <VStack
                         key={index}
                         gap={4}
@@ -37,34 +32,24 @@ export default function FeedPosts() {
                             </VStack>
                         </Flex>
                         <Skeleton w={"full"}>
-                            <Box h={"500px"}>contents wrapped</Box>
+                            <Box h={"400px"}>contents wrapped</Box>
                         </Skeleton>
                     </VStack>
-                ))
-            ) : (
-                <>
-                    <FeedPost
-                        img="/img1.png"
-                        username="asaprogrammer_"
-                        avatar="/img1.png"
-                    />
-                    <FeedPost
-                        img="/img2.png"
-                        username="john_doe"
-                        avatar="/img2.png"
-                    />
-                    <FeedPost
-                        img="/img3.png"
-                        username="josie_wales"
-                        avatar="/img3.png"
-                    />
-                    <FeedPost
-                        img="/img4.png"
-                        username="emily_jones"
-                        avatar="/img4.png"
-                    />
-                </>
-            )}
+                ))}
+
+            {!isLoading && posts.length > 0
+                ? posts.map((post) => <FeedPost key={post.id} post={post} />)
+                : posts.length === 0 && (
+                      <Flex direction={"column"} alignItems={"center"} gap={2}>
+                          <Text fontSize={"md"} color={"red.400"}>
+                              Dayuum... Looks like you don't have any friends
+                              yet.
+                          </Text>
+                          <Text color={"red.400"}>
+                              Stop being a loner and make some friends!
+                          </Text>
+                      </Flex>
+                  )}
         </Container>
     );
 }
