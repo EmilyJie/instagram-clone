@@ -8,6 +8,7 @@ import {
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import useFollowUser from "../../hooks/useFollowUser";
+import { timeAgo } from "../../utils/timeAgo";
 
 export default function PostHeader({ post, creatorProfile }) {
     const { handleFollowUser, isFollowing, isUpdating } = useFollowUser(
@@ -39,7 +40,9 @@ export default function PostHeader({ post, creatorProfile }) {
                             <Link to={`/${creatorProfile.username}`}>
                                 {creatorProfile.username}
                             </Link>
-                            <Box color={"gray.500"}>• 1w</Box>
+                            <Box color={"gray.500"}>
+                                • {timeAgo(post.createdAt)}
+                            </Box>
                         </>
                     ) : (
                         <Skeleton w={"100px"} h={"10px"} />
